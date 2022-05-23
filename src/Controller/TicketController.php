@@ -29,10 +29,10 @@ class TicketController extends AbstractController
        
         $tickets = $repository->findAll();
 
-        dd($tickets);
+        //dd($tickets);
 
         return $this->render('ticket/index.html.twig', [
-            'controller_name' => 'TicketController',
+            'tickets' => $tickets,
         ]);
     }
 }
