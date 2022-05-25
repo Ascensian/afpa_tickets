@@ -84,6 +84,7 @@ class TicketController extends AbstractController
                     // $manager->flush();
 
                     $this->ticketRepository->add($ticket, true);
+                    return $this->redirectToRoute('app_ticket');
 
 
         }
