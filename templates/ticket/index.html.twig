@@ -20,7 +20,8 @@
                 <th>ID</th>
                 <th>Object</th>
                 <th>Date de création</th>
-                <th>Status</th>     
+                <th>Status</th>
+                <th>Department</th>
             </tr>
         <thead>
         <tbody>
@@ -30,6 +31,7 @@
                     <td>{{ ticket.object }}</td>
                     <td>{{ ticket.createdAt  | date('d/m/y H:i')}}</td>
                     <td>{{ ticket.isActive }}</td>
+                    <td>{{ ticket.department.name }}</td>
                 </tr>
             {% endfor %}
         
