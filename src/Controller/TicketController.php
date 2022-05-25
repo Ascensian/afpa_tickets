@@ -4,15 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Ticket;
 use App\Form\TicketType;
-use App\Repository\TicketRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Id;
-use Doctrine\Persistence\ObjectManager;
 use PhpParser\Node\Expr\Cast\Int_;
+use App\Repository\TicketRepository;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/ticket")
@@ -94,6 +95,16 @@ class TicketController extends AbstractController
             
         ]);
 
+    }
+
+    /**
+     * @Route("/delete/{id}", name="ticket_delete", requirements={"id"="\d+"})
+     */
+
+    public function deleteTicket(Ticket $ticket): Response
+    {
+        $this->ticketRepository->remove($ticket, true);
+        return $this->redirectToRoute('app_ticket');
     }
 
    
