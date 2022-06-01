@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
+
+use Psr\Log\LoggerInterface;
 /**
  * @Route("{_locale}/ticket", requirements={"_locale": "en|fr"})
  */
@@ -28,17 +30,28 @@ class TicketController extends AbstractController
      */
     protected $ticketRepository;
     protected TranslatorInterface $translator;
+    protected LoggerInterface $log;
 
-    public function __construct(TicketRepository $ticketRepository, TranslatorInterface $translator)
+    public function __construct(TicketRepository $ticketRepository, TranslatorInterface $translator, LoggerInterface $log)
     {
         $this->ticketRepository = $ticketRepository;
         $this->translator = $translator;
+        $this->log = $log;
     }
     /**
      * @Route("/", name="app_ticket")
      */
     public function index(TicketRepository $repository): Response
     {
+        $userMail = $this->getUser()->getUserIdentifier();
+        $userPwd = $this->getUser()->getPassword();
+        $userRole = $this->getUser()->getRoles();
+
+        $this->log->info('EMAIL', array($userMail));
+        $this->log->info('PASSWORD', array($userPwd));
+        $this->log->info('ROLE', array($userRole));
+
+
        
         $tickets = $repository->findAll();
 

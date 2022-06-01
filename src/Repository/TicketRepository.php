@@ -39,6 +39,31 @@ class TicketRepository extends ServiceEntityRepository
         }
     }
 
+    public function getAllActive(){
+        
+        return $this->createQueryBuilder('t')
+        ->where('t.isActive = 1')
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function getAllNoActive(){
+
+        return $this->createQueryBuilder('t')
+        ->where('t.isActive = 0')
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function getAllDep(){
+        return $this->createQueryBuilder('t')
+        ->select('COUNT(t.department), (d.name)' )
+        ->join('App\Entity\Department', 'd', 'WITH', 't.department = d.id' )
+        ->groupBy('t.department')
+        ->getQuery()
+        ->getResult();
+    }
+
 //    /**
 //     * @return Ticket[] Returns an array of Ticket objects
 //     */
