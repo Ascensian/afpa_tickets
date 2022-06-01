@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des tickets{% endblock %}
+{% block title %}{{ "title.ticket.list" | trans }}
+{% endblock %}
 
 {% block stylesheets %}
 
@@ -12,9 +13,9 @@
 
  <div class="container">
  
-    <h1 class="my-7">Liste des Tickets</h1>
+    <h1 class="my-7">{{ "title.ticket.list" | trans }}</h1>
 
-    <a href="{{ path('ticket_create') }}" class="btn btn-primary">Ajouter</a>
+    <a href="{{ path('ticket_create') }}" class="btn btn-primary">{{ "button.add" | trans }}</a>
 
     <table class="table table-striped tabled-bordered" id="myTable">
         <thead>
@@ -36,8 +37,8 @@
                     <td>{{ ticket.createdAt  | date('d/m/y H:i')}}</td>
                     <td>{{ ticket.isActive }}</td>
                     <td>{{ ticket.department.name }}</td>
-                    <td><a href="{{ path('ticket_update', {'id': ticket.id}) }}" class="btn btn-primary">Modifier</a></td>
-                    <td><a href="{{ path('ticket_delete', {'id': ticket.id}) }}" class="btn btn-danger">Supprimer</a></td>
+                    <td><a href="{{ path('ticket_update', {'id': ticket.id}) }}" class="btn btn-primary">{{ "button.update" | trans }}</a></td>
+                    <td><a href="{{ path('ticket_delete', {'id': ticket.id}) }}" class="btn btn-danger">{{ "button.delete" | trans }}</a></td>
                 </tr>
             {% endfor %}
         

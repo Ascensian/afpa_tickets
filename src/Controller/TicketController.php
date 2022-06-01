@@ -14,9 +14,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
+use Symfony\Contracts\Translation\TranslatorInterface;
 /**
- * @Route("/ticket")
+ * @Route("{_locale}/ticket", requirements={"_locale": "en|fr"})
  */
 
 class TicketController extends AbstractController
@@ -27,10 +27,12 @@ class TicketController extends AbstractController
      * @var TicketRepository
      */
     protected $ticketRepository;
+    protected TranslatorInterface $translator;
 
-    public function __construct(TicketRepository $ticketRepository)
+    public function __construct(TicketRepository $ticketRepository, TranslatorInterface $translator)
     {
         $this->ticketRepository = $ticketRepository;
+        $this->translator = $translator;
     }
     /**
      * @Route("/", name="app_ticket")
@@ -61,10 +63,13 @@ class TicketController extends AbstractController
             $ticket->setIsActive(true)
             ->setCreatedAt(new \DateTimeImmutable());
 
-            $title = "Création d'un ticket";
+            // $title = "Création d'un ticket";
+
+            $title = $this->translator->trans("title.ticket.create");
 
         } else {
-            $title = "Update du formulaire : {$ticket->getId()}" ; 
+            $title = "Update du formulaire : {$ticket->getId()}" ;
+            $title = $this->translator->trans("title.ticket.update") . "{$ticket->getId()}";
         }
 
         
