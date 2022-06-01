@@ -81,10 +81,25 @@ class TicketController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // dump("OKAY");
             // dd($form);
+
+
+            if ($request->attributes->get("_route")==="ticket_create") {
+                $this->addFlash(
+                    'success',
+                    'Votre ticket a bien été ajouté');
+                    
+            } else {
+                $this->addFlash(
+                    'info',
+                    'Votre ticket a bien été mis à jour');
+            }
+
             $ticket->setObject($form['object']->getData())
                     ->setMessage($form['message']->getData())
                     ->setDepartment($form['department']->getData());
 
+
+            
                     // $manager->persist($ticket);
                     // $manager->flush();
 
@@ -93,7 +108,7 @@ class TicketController extends AbstractController
 
 
         }
-        // dd($form);
+        
 
         return $this->render('ticket/create.html.twig', [
             'form' => $form->createView(),
@@ -110,6 +125,8 @@ class TicketController extends AbstractController
     public function deleteTicket(Ticket $ticket): Response
     {
         $this->ticketRepository->remove($ticket, true);
+
+        $this->addFlash('danger', 'Votre ticket a bien été supprimé');
         return $this->redirectToRoute('app_ticket');
     }
 

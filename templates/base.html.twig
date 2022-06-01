@@ -17,6 +17,21 @@
     </head>
     <body>
     {% include 'shared/_language_selector.html.twig' %}
+
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <p> Vous êtes connecté en tant que
+    {{ app.user.name }}</p>
+    <a href="{{ path('app_logout')}}">Déconnecter</a>
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }} text-center">
+                    {{ message }}
+                    </div>
+            {% endfor %}
+        {% endfor %}
+    
+    {% endif %}
+        
         {% block body %}{% endblock %}
     </body>
     <!-- JavaScript Bundle with Popper -->
