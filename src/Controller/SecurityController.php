@@ -10,12 +10,12 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("{_locale}/login", name="app_login")
+     * @Route("{_locale}/login", name="app_login", requirements={"_locale": "en|fr"})
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
-            return $this->redirectToRoute('app_ticket');
+            return $this->redirectToRoute('app_home');
         }
 
         // get the login error if there is one
