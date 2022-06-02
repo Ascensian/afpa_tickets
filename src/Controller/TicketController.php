@@ -17,6 +17,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Mailer\MailerInterface;
+
 /**
  * @Route("{_locale}/ticket", requirements={"_locale": "en|fr"})
  */
@@ -31,12 +33,14 @@ class TicketController extends AbstractController
     protected $ticketRepository;
     protected TranslatorInterface $translator;
     protected LoggerInterface $log;
+    protected MailerInterface $mailer;
 
-    public function __construct(TicketRepository $ticketRepository, TranslatorInterface $translator, LoggerInterface $log)
+    public function __construct(TicketRepository $ticketRepository, TranslatorInterface $translator, LoggerInterface $log, MailerInterface $mailer)
     {
         $this->ticketRepository = $ticketRepository;
         $this->translator = $translator;
         $this->log = $log;
+        $this->mailer = $mailer;
     }
     /**
      * @Route("/", name="app_ticket")
@@ -97,6 +101,7 @@ class TicketController extends AbstractController
 
 
             if ($request->attributes->get("_route")==="ticket_create") {
+                MailerController::sendEmail($this->mailer, "user1@test.fr", "Ticket ajouté", "a bien été ajouté", $ticket);
                 $this->addFlash(
                     'success',
                     'Votre ticket a bien été ajouté');
@@ -105,6 +110,7 @@ class TicketController extends AbstractController
                 $this->addFlash(
                     'info',
                     'Votre ticket a bien été mis à jour');
+                    MailerController::sendEmail($this->mailer, "user1@test.fr", "Ticket modifié", "a bien été modifié", $ticket);
             }
 
             $ticket->setObject($form['object']->getData())
@@ -137,6 +143,8 @@ class TicketController extends AbstractController
 
     public function deleteTicket(Ticket $ticket): Response
     {
+        MailerController::sendEmail($this->mailer, "user1@test.fr", "Ticket Supprimé", " a bien été supprimé", $ticket);
+
         $this->ticketRepository->remove($ticket, true);
 
         $this->addFlash('danger', 'Votre ticket a bien été supprimé');

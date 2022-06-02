@@ -1,6 +1,5 @@
 monolog:
-    channels:
-        ['userInfos']
+    channels: ['userInfos']
         # - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
 
 when@dev:
@@ -12,6 +11,7 @@ when@dev:
                 level: info
                 channels: ["userInfos"]
                 max_files: 10
+                
             syslog_handler:
                 type: syslog
                 # log error-level messages and higher
