@@ -17,8 +17,13 @@
  <div class="container">
  
     <h1 class="my-7">{{ "title.ticket.list" | trans }}</h1>
-    <center><a href="{{ path('ticket_create') }}" class="btn btn-warning">Ajouter</a></center>   
-    <a href="{{ path('ticket_create') }}" class="btn btn-primary">{{ "button.add" | trans }}</a>
+    <center>
+        <a href="{{ path('ticket_create') }}" class="btn btn-warning">{{ "button.add" | trans }}</a>
+        <a href="{{ path('ticket_pdf')}}" class="btn btn-danger">Export PDF</a>
+        <a href="{{ path('ticket_excel')}}" class="btn btn-success">Export Excel</a>
+    </center>   
+
+    {# <a href="{{ path('ticket_create') }}" class="btn btn-primary">{{ "button.add" | trans }}</a> #}
 
     <table class="table table-striped tabled-bordered" id="myTable">
         <thead>

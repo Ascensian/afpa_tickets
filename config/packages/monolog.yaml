@@ -9,7 +9,7 @@ when@dev:
                 type: rotating_file
                 path: "%kernel.logs_dir%/info_user.log"
                 level: info
-                channels: ["userInfos"]
+                channels: ["!userInfos"]
                 max_files: 10
                 
             syslog_handler:
