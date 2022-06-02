@@ -25,7 +25,7 @@ class TicketType extends AbstractType
             ])
             ->add('message')
             // ->add('comment')
-            // ->add('isActive')
+            // ->add('ticketStatut')
             // ->add('createdAt', DateTimeType::class, [
             //     'widget' => 'single_text'
             // ])

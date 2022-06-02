@@ -18,6 +18,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Workflow\Registry;
 
 /**
  * @Route("{_locale}/ticket", requirements={"_locale": "en|fr"})
@@ -34,13 +35,16 @@ class TicketController extends AbstractController
     protected TranslatorInterface $translator;
     protected LoggerInterface $log;
     protected MailerInterface $mailer;
+    protected $registry;
+    
 
-    public function __construct(TicketRepository $ticketRepository, TranslatorInterface $translator, LoggerInterface $log, MailerInterface $mailer)
+    public function __construct(TicketRepository $ticketRepository, TranslatorInterface $translator, LoggerInterface $log, MailerInterface $mailer, Registry $registry)
     {
         $this->ticketRepository = $ticketRepository;
         $this->translator = $translator;
         $this->log = $log;
         $this->mailer = $mailer;
+        $this->registry = $registry;
     }
     /**
      * @Route("/", name="app_ticket")
@@ -77,7 +81,7 @@ class TicketController extends AbstractController
         if (!$ticket) {
             $ticket = new Ticket;
 
-            $ticket->setIsActive(true)
+            $ticket->setTicketStatut('initial')
             ->setCreatedAt(new \DateTimeImmutable());
 
             // $title = "Création d'un ticket";
@@ -85,6 +89,12 @@ class TicketController extends AbstractController
             $title = $this->translator->trans("title.ticket.create");
 
         } else {
+            $workflow = $this->registry->get($ticket, 'ticketTraitement');
+
+            if($ticket->getTicketStatut() != 'wip' ) {
+                $workflow->apply($ticket, 'to_wip');
+            }
+
             $title = "Update du formulaire : {$ticket->getId()}" ;
             $title = $this->translator->trans("title.ticket.update") . "{$ticket->getId()}";
         }
@@ -150,6 +160,28 @@ class TicketController extends AbstractController
         $this->addFlash('danger', 'Votre ticket a bien été supprimé');
         return $this->redirectToRoute('app_ticket');
     }
+
+    /** 
+     * @Route("/close/{id}", name="ticket_close",requirements={"id"="\d+"})
+     */
+    public function closeTicket(Ticket $ticket): Response
+    {
+        $workflow = $this->registry->get($ticket, 'ticketTraitement');
+        $workflow->apply($ticket, 'to_finished');
+        $this->ticketRepository->add($ticket, true);
+
+        return $this->redirectToRoute('app_ticket');
+    }
+
+     /**
+      * @Route("/details/{id}", name="ticket_detail", requirements={"id"="\d+"})
+      */
+        public function detailTicket(Ticket $ticket) : Response
+        {
+            //dd($ticket);
+            return $this->render('ticket/detail.html.twig', ['ticket' => $ticket]);
+        }
+
 
    
 }

@@ -91,9 +91,9 @@ class AppFixtures extends Fixture
 
             $ticket->setMessage($faker->paragraph(3))
                     ->setComment($faker->paragraph(3))
-                    ->setIsActive($faker->boolean(75))
+                    ->setTicketStatut('initial')
                     ->setCreatedAt(new \DateTimeImmutable()) // attention les dates sont crées en fonction du réglage serveur
-                    ->setFinishedAt(!$ticket->isIsActive() ? ImmutableDateTime::immutableDateTimeBetween('now', '6 months') : null)
+                    ->setFinishedAt($ticket->getTicketStatut() == 'finished' ? ImmutableDateTime::immutableDateTimeBetween('now', '6 months') : null)
                     ->setObject($faker->sentence(6))
                     ->setDepartment($faker->randomElement($allDepartments));
                 // On fait persister les données

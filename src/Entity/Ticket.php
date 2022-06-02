@@ -11,6 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Ticket
 {
     /**
+     * 
+     * @ORM\Column(type="string", columnDefinition="ENUM('initial','wip','clientAcceptance','finished')")
+     */
+    private $ticket_statut;
+
+    /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -27,10 +33,7 @@ class Ticket
      */
     private $message;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isActive;
+    
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -82,17 +85,7 @@ class Ticket
         return $this;
     }
 
-    public function isIsActive(): ?bool
-    {
-        return $this->isActive;
-    }
-
-    public function setIsActive(bool $isActive): self
-    {
-        $this->isActive = $isActive;
-
-        return $this;
-    }
+    
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -138,6 +131,18 @@ class Ticket
     public function setDepartment(?Department $department): self
     {
         $this->department = $department;
+
+        return $this;
+    }
+
+    public function getTicketStatut(): ?string
+    {
+        return $this->ticket_statut;
+    }
+
+    public function setTicketStatut(string $ticket_statut): self
+    {
+        $this->ticket_statut = $ticket_statut;
 
         return $this;
     }

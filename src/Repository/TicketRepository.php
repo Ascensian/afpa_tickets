@@ -42,7 +42,22 @@ class TicketRepository extends ServiceEntityRepository
     public function getAllActive(){
         
         return $this->createQueryBuilder('t')
-        ->where('t.isActive = 1')
+        ->where("t.ticket_statut = 'initial'")
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function getAllWithStatus($value) {
+        return $this->createQueryBuilder('t')
+        ->where("t.ticket_statut = :val")
+        ->setParameter('val', $value)
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function getAllWip() {
+        return $this->createQueryBuilder('t')
+        ->where("t.ticket_statut = 'wip'")
         ->getQuery()
         ->getResult();
     }
@@ -50,7 +65,7 @@ class TicketRepository extends ServiceEntityRepository
     public function getAllNoActive(){
 
         return $this->createQueryBuilder('t')
-        ->where('t.isActive = 0')
+        ->where("t.ticket_statut = 'finished'")
         ->getQuery()
         ->getResult();
     }

@@ -6,6 +6,9 @@
 {% block stylesheets %}
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    
+    
     
 {% endblock %}
 
@@ -14,7 +17,7 @@
  <div class="container">
  
     <h1 class="my-7">{{ "title.ticket.list" | trans }}</h1>
-
+    <center><a href="{{ path('ticket_create') }}" class="btn btn-warning">Ajouter</a></center>   
     <a href="{{ path('ticket_create') }}" class="btn btn-primary">{{ "button.add" | trans }}</a>
 
     <table class="table table-striped tabled-bordered" id="myTable">
@@ -26,23 +29,39 @@
                 <th>Status</th>
                 <th>Department</th>
                 <th></th>
-                <th></th>
             </tr>
         <thead>
         <tbody>
             {% for ticket in tickets %}
-                <tr>
+                <tr class="link" data-href="{{ path('ticket_detail', {'id': ticket.id}) }}" style="cursor: pointer;">
                     <th scope="row">{{ ticket.id }}</th>
                     <td>{{ ticket.object }}</td>
                     <td>{{ ticket.createdAt  | date('d/m/y H:i')}}</td>
-                    <td>{{ ticket.isActive }}</td>
+                    <td>{{ ticket.ticketStatut }}</td>
                     <td>{{ ticket.department.name }}</td>
-                    <td><a href="{{ path('ticket_update', {'id': ticket.id}) }}" class="btn btn-primary">{{ "button.update" | trans }}</a></td>
-                    <td><a href="{{ path('ticket_delete', {'id': ticket.id}) }}" class="btn btn-danger">{{ "button.delete" | trans }}</a></td>
+                    <td>
+
+                    {% if ticket.ticketStatut != 'finished' %}
+                        <a href="{{path('ticket_update',{'id' :ticket.id})}}" class="btn btn-success">
+                        <em class="fa-solid fa-gears"></em>
+                        </a>
+
+                    {% endif %}
+                        
+                    {% if ticket.ticketStatut == 'finished' %}
+                        <a href="{{path('ticket_delete',{'id' :ticket.id})}}" class="btn btn-danger">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </a>
+                    {% endif %}
+
+                    {% if ticket.ticketStatut == 'wip' %}
+                        <a href="{{path('ticket_close',{'id' :ticket.id})}}" class="btn btn-warning">
+                            <em class="fa-solid fa-square-xmark"></em>
+                        </a>
+                    {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
-        
-        
         </tbody>
 
     </table>
@@ -57,5 +76,10 @@
     <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
     <script>$(document).ready( function () {
     $('#myTable').DataTable();
-} );</script>
+} );
+
+ $(document).on('click', 'tr.link:not(a)', function(i){
+        i.stopPropagation();
+        window.location.href =$(this).data('href');                     
+    });</script>
 {% endblock %}
